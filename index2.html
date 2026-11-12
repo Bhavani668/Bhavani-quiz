@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Quiz - By Bhavani</title>
+<style>
+body{font-family:Arial;background:#fff0f5;text-align:center;padding:20px}
+.card{background:white;max-width:500px;margin:auto;padding:25px;border-radius:20px;box-shadow:0 4px 15px #ffc0d9}
+h1{color:#d63384} h2{color:#333}
+button{display:block;width:100%;padding:12px;margin:8px 0;font-size:16px;border:2px solid #ff9ec6;border-radius:10px;background:#fff;cursor:pointer}
+button:hover{background:#ffe3ef}
+#result{font-size:18px;font-weight:bold;margin:15px}
+#next{background:#d63384;color:white;border:none;padding:12px;border-radius:10px;font-size:16px}
+#score{font-size:18px;color:#555}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🌸 My Quiz</h1>
+<p>By Bhavani | EdBytes Milestone 4</p>
+<p id="score">Question 1 of 3 | Score: 0</p>
+<h2 id="question"></h2>
+<div id="options"></div>
+<p id="result"></p>
+<button id="next" onclick="nextQ()" style="display:none">Next ➡️</button>
+<button onclick="restart()" style="background:#eee">🔄 Restart Quiz</button>
+</div>
+
+<script>
+const quiz=[
+{q:"1. What does HTML stand for?",a:["Hyper Text Markup Language","High Text Machine Language","Hyperlink Text Making Language"],correct:0},
+{q:"2. Which tag makes a button?",a:["<button>","<btn>","<click>"],correct:0},
+{q:"3. Which one saves data in the browser?",a:["localStorage","paint","printer"],correct:0}
+];
+let current=0, score=0, answered=false;
+
+function showQ(){
+  answered=false;
+  document.getElementById("result").textContent="";
+  document.getElementById("next").style.display="none";
+  document.getElementById("score").textContent=`Question ${current+1} of 3 | Score: ${score}`;
+  document.getElementById("question").textContent=quiz[current].q;
+  let html="";
+  quiz[current].a.forEach((opt,i)=>{
+    html+=`<button onclick="check(${i},this)">${opt}</button>`;
+  });
+  document.getElementById("options").innerHTML=html;
+}
+function check(i,btn){
+  if(answered) return;
+  answered=true;
+  if(i===quiz[current].correct){
+    score++;
+    document.getElementById("result").textContent="✅ Correct!";
+    document.getElementById("result").style.color="green";
+    btn.style.background="#c8f7c5";
+  } else {
+    document.getElementById("result").textContent="❌ Incorrect! Correct answer: "+quiz[current].a[quiz[current].correct];
+    document.getElementById("result").style.color="red";
+    btn.style.background="#ffc2c2";
+  }
+  document.getElementById("score").textContent=`Question ${current+1} of 3 | Score: ${score}`;
+  document.getElementById("next").style.display="block";
+  if(current===2) document.getElementById("next").textContent="See Final Score 🏆";
+}
+function nextQ(){
+  current++;
+  if(current<3){ showQ(); }
+  else{
+    document.getElementById("question").textContent="🎉 Quiz Finished!";
+    document.getElementById("options").innerHTML=`<h2>Your Final Score: ${score} / 3</h2><p>${score===3?"Perfect! All Correct! 🌟":score>=2?"Great job! 👏":"Good try! Try again! 💪"}</p>`;
+    document.getElementById("result").textContent="";
+    document.getElementById("next").style.display="none";
+    document.getElementById("score").textContent=`Final Score: ${score} / 3`;
+  }
+}
+function restart(){ current=0; score=0; document.getElementById("next").textContent="Next ➡️"; showQ(); }
+showQ();
+</script>
+</body>
+</html>
